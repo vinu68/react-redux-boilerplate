@@ -1,12 +1,42 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const CardTitle = styled.h4`
+	margin-bottom: 0.75rem;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	font-weight: bold;
+	color: black;
+	max-width: 150px;
+`;
+const CardText = styled.div`
+	margin-bottom: 5px;
+	display: inline-block;
+`;
+const CardTextBold = styled.span`
+	margin-right: 5px;
+	font-weight: bold;
+`;
 
 const Card = (props) => {
 	return (
 		<div className='card'>
 			<img className='card-img-top img-fluid' src={props.data.image} alt='Card image cap' width='400' />
 			<div className='card-body'>
-				<h4 className='card-title'>{props.data.name}</h4>
-				<p className='card-text'>{props.data.species}</p>
+				<CardTitle>{props.data.name}</CardTitle>
+				<CardText>
+					<CardTextBold>Species</CardTextBold>
+					<span>{props.data.species}</span>
+				</CardText>
+				<CardText>
+					<CardTextBold>Status</CardTextBold>
+					<span>{props.data.status}</span>
+				</CardText>
+				<CardText>
+					<CardTextBold>Gender</CardTextBold>
+					<span>{props.data.gender}</span>
+				</CardText>
 			</div>
 		</div>
 	);

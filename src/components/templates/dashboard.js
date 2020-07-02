@@ -11,15 +11,23 @@ import { connect } from 'react-redux';
 import { fetchData } from '../../actions/dashboard';
 
 const Dashboard = (props) => {
-	console.log('props', props);
 	const [filters, setFilters] = useState([]);
+	const [filterCounter, setFilterCount] = useState(0);
 	const [searchedValue, setsearchedValue] = useState();
 	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		console.log('valled');
 		props.fetchData();
 	}, []);
+
+	useEffect(() => {
+		let queryString = filters
+			.map((data) => {
+				return data.type + '=' + data.value;
+			})
+			.join('&');
+		props.fetchData(page, queryString, searchedValue);
+	}, [filterCounter]);
 
 	const renderListItems = () => {
 		if (props.data && props.data.length) {
@@ -29,21 +37,49 @@ const Dashboard = (props) => {
 		}
 	};
 
+	const getNextPageRecords = (event) => {
+		let nextPage = event.target.dataset.page;
+		setPage(nextPage);
+		let queryString =
+			filters.length &&
+			filters
+				.map((data) => {
+					return data.type + '=' + data.value;
+				})
+				.join('&');
+		props.fetchData(nextPage, queryString, searchedValue);
+	};
+
 	const _applyFilters = (event) => {
 		let selectedFilters = filters;
+		let counter = filterCounter;
 		if (event.target.checked) {
 			selectedFilters.push({ type: event.target.dataset.filtertype, value: event.target.value });
+			++counter;
 		} else {
 			selectedFilters = selectedFilters.filter((item) => {
 				return item.type !== event.target.dataset.filtertype && item.value !== event.target.value;
 			});
+			--counter;
 		}
 		setFilters(selectedFilters);
-		//this.setState({ selectFilters: selectedFilters });
+		setFilterCount(counter);
 	};
 
 	const search = (event) => {
-		setsearchedValue({ searchValue: event.target.value });
+		let queryString =
+			filters.length &&
+			filters
+				.map((data) => {
+					return data.type + '=' + data.value;
+				})
+				.join('&');
+		props.fetchData(page, queryString, searchedValue);
+	};
+
+	const onInputChange = (event) => {
+		let searchData = event.target.value;
+		setsearchedValue(searchData);
 	};
 
 	return (
@@ -55,7 +91,7 @@ const Dashboard = (props) => {
 						<div className='grid-body'>
 							<div className='row'>
 								{/* BEGIN FILTERS */}
-								<Filters checkboxClick={_applyFilters} />
+								<Filters checkboxClick={_applyFilters} selectedFilters={filters} />
 								{/* END FILTERS */}
 								{/* BEGIN RESULT */}
 								<div className='col-md-9 float-left'>
@@ -65,7 +101,7 @@ const Dashboard = (props) => {
 									</h2>
 									<hr />
 									{/* BEGIN SEARCH INPUT */}
-									<Search searchClick={search} searchValue={searchedValue} />
+									<Search searchClick={search} searchValue={searchedValue} onChange={onInputChange} />
 									{/* END SEARCH INPUT */}
 									<p>{''}</p>
 
@@ -117,14 +153,16 @@ const Dashboard = (props) => {
 
 									{/* END TABLE RESULT */}
 									{/* BEGIN PAGINATION */}
+
 									{props.data.length ? (
 										<Pagination
 											count={props.info && props.info.count}
 											totalPage={props.info && props.info.pages}
 											page={page}
+											pageClick={getNextPageRecords}
 										/>
 									) : null}
-
+									{/* pageClick={this._getNextPageRecords}*/}
 									{/*  END PAGINATION */}
 								</div>
 								{/* END RESULT */}
@@ -140,7 +178,7 @@ const Dashboard = (props) => {
 
 const mapStatetoProps = (state) => ({
 	data: state.dashboard.data,
-	info: state.dashboard.state,
+	info: state.dashboard.info,
 	asyncInProgress: state.dashboard.asyncInProgress,
 });
 

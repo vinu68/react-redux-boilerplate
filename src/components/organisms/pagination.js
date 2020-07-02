@@ -8,7 +8,7 @@ const renderPageNumbers = (page, pageNumbers, pageClick) => {
 			<Fragment key={index}>
 				{page > 5 && number > page - 3 && number < page + 3 ? (
 					<li className={`page-item ${page === number ? 'active ' : 'cursor-pointer'}`} key={number}>
-						<a className='page-link' href={number} tabIndex='-1' data-value={number} onClick={pageClick}>
+						<a className='page-link' href='#' tabIndex='-1' data-page={number} onClick={pageClick}>
 							{number}
 						</a>
 					</li>
@@ -18,7 +18,7 @@ const renderPageNumbers = (page, pageNumbers, pageClick) => {
 							page === number ? 'active' : 'cursor-pointer'
 						}`}
 						key={number}>
-						<a className='page-link' href={number} tabIndex='-1' data-value={number} onClick={pageClick}>
+						<a className='page-link' href='#' tabIndex='-1' data-page={number} onClick={pageClick}>
 							{number}
 						</a>
 					</li>
@@ -28,9 +28,10 @@ const renderPageNumbers = (page, pageNumbers, pageClick) => {
 	});
 };
 
-const Pagination = props => {
+const Pagination = (props) => {
+	console.log(props);
 	let pageNumbers = [];
-	let recordsLimit = props.limit || 20;
+	let recordsLimit = props.totalPage || 20;
 	for (let i = 1; i <= Math.ceil(props.count / recordsLimit); i++) {
 		pageNumbers.push(i);
 	}
@@ -52,7 +53,7 @@ const Pagination = props => {
 							Previous
 						</a>
 					</li>
-					{renderPageNumbers(props.page, pageNumbers)}
+					{renderPageNumbers(props.page, pageNumbers, props.pageClick)}
 
 					<li
 						className={`page-item ${
