@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { getTimeDifference } from '../../selectors';
+
 const CardTitle = styled.h4`
 	margin-bottom: 0.75rem;
 	text-overflow: ellipsis;
@@ -31,24 +33,30 @@ const Inner = styled.div`
 `;
 
 const Card = (props) => {
+	let { image, name, species, status, gender, origin, created } = props.data;
+	let createdtime = getTimeDifference(props.data.created);
 	return (
 		<div className='card'>
 			<Inner>
-				<img className='card-img-top img-fluid' src={props.data.image} alt='Card image cap' width='400' />
+				<img className='card-img-top img-fluid' src={image} alt='Card image cap' width='400' />
 			</Inner>
 			<div className='card-body'>
-				<CardTitle>{props.data.name}</CardTitle>
+				<CardTitle>{name}</CardTitle>
 				<CardText>
 					<CardTextBold>Species</CardTextBold>
-					<span>{props.data.species}</span>
+					<span>{species}</span>
 				</CardText>
 				<CardText>
 					<CardTextBold>Status</CardTextBold>
-					<span>{props.data.status}</span>
+					<span>{status}</span>
 				</CardText>
 				<CardText>
 					<CardTextBold>Gender</CardTextBold>
-					<span>{props.data.gender}</span>
+					<span>{gender}</span>
+				</CardText>
+				<CardText>
+					<CardTextBold>Created</CardTextBold>
+					<span>{createdtime ? createdtime + ' years ago' : ''}</span>
 				</CardText>
 			</div>
 		</div>

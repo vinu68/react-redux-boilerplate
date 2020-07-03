@@ -136,7 +136,7 @@ const Dashboard = (props) => {
 												</button>
 												<ul className='dropdown-menu' role='menu'>
 													<li>
-														<a href='#'>Name</a>
+														<a href='#'>Id</a>
 													</li>
 													<li>
 														<a href='#'>Date</a>
