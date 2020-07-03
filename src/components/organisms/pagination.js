@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react';
 
 const renderPageNumbers = (page, pageNumbers, pageClick) => {
-	console.log('pageNumbers', pageNumbers);
-	console.log('page', page);
 	return pageNumbers.map((number, index) => {
 		return (
 			<Fragment key={index}>
@@ -29,7 +27,6 @@ const renderPageNumbers = (page, pageNumbers, pageClick) => {
 };
 
 const Pagination = (props) => {
-	console.log(props);
 	let pageNumbers = [];
 	let recordsLimit = props.totalPage || 20;
 	for (let i = 1; i <= Math.ceil(props.count / recordsLimit); i++) {

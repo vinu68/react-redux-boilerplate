@@ -54,7 +54,24 @@ const Dashboard = (props) => {
 		let selectedFilters = filters;
 		let counter = filterCounter;
 		if (event.target.checked) {
-			selectedFilters.push({ type: event.target.dataset.filtertype, value: event.target.value });
+			let typeIndex =
+				selectedFilters &&
+				selectedFilters.findIndex(
+					(data) => data.type.toLowerCase() === event.target.dataset.filtertype.toLowerCase()
+				);
+			if (typeIndex >= 0) {
+				selectedFilters[typeIndex] = {
+					...selectedFilters[typeIndex],
+					...{ type: event.target.dataset.filtertype, value: event.target.value },
+				};
+			} else {
+				selectedFilters = [
+					...selectedFilters,
+					{ type: event.target.dataset.filtertype, value: event.target.value },
+				];
+			}
+
+			//selectedFilters.push({ type: event.target.dataset.filtertype, value: event.target.value });
 			++counter;
 		} else {
 			selectedFilters = selectedFilters.filter((item) => {
